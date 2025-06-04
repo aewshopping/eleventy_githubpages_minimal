@@ -4,4 +4,6 @@ export default async function(eleventyConfig) {
     eleventyConfig.setInputDirectory("src");
 
     eleventyConfig.addPassthroughCopy("public");
+
+    eleventyConfig.setOutputDirectory("build");
 };
