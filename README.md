@@ -4,31 +4,53 @@ _Date last updated: 5 June 2025_
 
 Objective is to make a minimal eleventy site and serve with github pages, as easily as possible!
 
+## Option 1 - simplest possible build with `deploy from a branch`
+
 My starting premise is that I am going to copy the output directory `_site` to the repo (noting that I need to rename the output directory to `docs`), rather than do what you should normally do which is .gitignore it.
 
-## Option 1 - build automatically with `deploy from a branch`
+If you select this option in settings **you will need to run the build process remotely** to create the build directory and then push this all to the repo (the same branch).
 
-If you select this option in settings **you will need to run the build process remotely** to create the build directory and then push this all to the repo.
+Steps are:
 
-Any changes to the repo (eg a change to the readme) will trigger github pages to update, even where there won't be any change to the site itself.
+1. Update eleventy config file to output to a `docs` directory.
+2. Make sure your .gitignore file is **not** ignoring the docs directory - you want this directory to be stored in the repo main branch along with the other files.
+3. Go to github repo `settings` / `pages` / `deploy from a branch` and select the main branch.
+4. Select the `/docs` directory option, in the same bit of the settings page.
+5. It is set up in this way because no other directory is available to be selected in the github pages settings, so you can't just use the default output directory for eleventy which is `_site` as this is not recognised in the `settings` / `pages` page - a bit odd but there you go!
 
-To get github pages to work you need to set the output path directory to `docs`. No other directory is available to be selected in the github pages settings - a bit odd but there you go.
+_Any_ changes to the repo (eg even a change to the readme) will trigger github pages to update, even where there won't be any change to the site itself.
 
-## Option 2 - build with `GitHub actions`
+There is no way to change this default behaviour, whereas you _can_ change the build and deploy trigger to whatever you want under options 1 and 2.
 
-This is what is currently selected in the settings. You now have two more options!
+## Option 2 - the 'recommended' `deploy from a branch` option
 
-### Option 2(a) - use the official (and recommended) method...
+This is what is currently selected in the setup for this repo, albeit it contains the code for all three.
 
-...which can be found here [https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-git-hub-pages](https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-git-hub-pages). This is a single github actions yaml file which uses the action [https://github.com/peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages).
+More info can be found here [https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-git-hub-pages](https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-git-hub-pages). This is a single github actions yaml file which uses the action [https://github.com/peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages).
 
-By default it will run every time the repo changes, building a new site and **not** requiring you to check in your build site to the repo which is a **good thing**.
+By default it will run every time the repo changes, however I have configured to run on workflow_dispatch ie when you press a button.
 
-### Option 2(b) - use the DIY method...
+The steps to get it working:
 
-...which is what is currently in place for this repo. I created two workflows:
+1. Update line 34 of the yaml workflow file to refer to your own repo name `- run: npx @11ty/eleventy --pathprefix=/eleventy_githubpages_minimal/ # the repo name here`.
+2. I also needed to updated line 41 `publish_dir: ./docs` to refer to the right output directory that I had specified in my eleventy config.
+3. Run the workflow, this will create a gh-pages branch, where it will output the site's html per eleventy's normal build process.
+4. On the repo settings, select pages, then choose `deply from a branch` and select the gh-pages branch.
+5. This means that whenever the peaceiris action is run (or whatever you decided to call it) it will build to gh-pages branch and then git-hub pages' own deploy action will kick in, thus deploying the site for all to see.
 
-- an `eleventybuild.yaml` workflow which builds the site and saves the built site in the repo (under docs so I can switch back to the old method if I feel like it).
-- a `docs_serve.yaml` which is triggered by completion of the above workflow and uses the boilerplate github actions workflow that you are presented with in settings if you go for the build with `GitHub actions` option and select the `static pages` workflow. I updated the path to `'./docs'` to point it to where the static files created above are stored. 
+I found this method to be a little ropey when setting it up, the final build and deploy site action didn't always seem to trigger or run properly. But everyone else uses this method so presumably it will almost always work fine.
 
-_Note that under **option 2(a)** and under **option 2(b)** you can configure the github actions file to run on push to the main branch or some other trigger. I have it on workflow dispatch right now - ie you have to click a button to deploy._
+### Option 3 - use a pure git-hub actions method
+
+As for option 1 you need to make sure that the output directory `_site` folder (noting that I renamed it to `docs`) is stored alongside your source files in your repo, rather than do what you should normally do which is .gitignore it.
+
+I then created two workflows:
+
+1. an `eleventybuild.yaml` workflow which builds the site and saves the built site in the repo. Note that I am not doing any cache stuff here, whereas this is included in the (probably better) github actions yaml file under option 2. I don't why the cache is needed to be honest so that's why it is not included. 
+2. a `docs_serve.yaml` which is triggered by completion of the above workflow and uses the boilerplate github actions workflow that you are presented with in `settings` if you go for the build with `GitHub actions` option and select the `static pages` workflow - you get a handy template yaml file. I updated the path to `'./docs'` to point it to where the static files created above are stored. 
+
+This method seems to work pretty well but some people may find it odd or confusing to store the served html files in the same repo, branch / file structure as the source files.
+
+---
+
+_Note that under **option 2** and under **option 3** you can configure the github actions file to run on push to the main branch or some other trigger. I have it on workflow dispatch right now - ie you have to click a button to deploy._
