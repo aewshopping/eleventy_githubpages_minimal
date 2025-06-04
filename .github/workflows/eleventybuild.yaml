@@ -23,10 +23,7 @@ jobs:
         run: npm install # Install all dependencies listed in package.json
 
       - name: Build Eleventy site
-        run: npx @11ty/eleventy # Or `eleventy` if you don't have a build script in package.json
-        # This command assumes you have a "build" script in your package.json
-        # that runs Eleventy (e.g., "build": "eleventy").
-        # If you simply run `eleventy`, replace `npm run build` with `eleventy`.
+        run: npx @11ty/eleventy
 
       - name: Commit and push
         run: |-
