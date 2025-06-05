@@ -63,6 +63,8 @@ You could just change the href in the head (`href="<repo-name>/public/style.css"
 
 The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`. Have a look at the [eleventy path prefix docs page](https://www.11ty.dev/docs/config/#deploy-to-a-subdirectory-with-a-path-prefix) for more details.
 
+Then do something like this in your `eleventy.config.js` file (note I am using ES Modules but most older eleventy sites pre v3 with be using Common JS):
+
 ```javascript
 import { HtmlBasePlugin } from "@11ty/eleventy";
 
