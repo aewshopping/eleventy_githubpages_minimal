@@ -61,7 +61,7 @@ But because your github pages builds your site relative to the repo name - `http
 
 You could just change the href in the head (`href="<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server or if you are serving later elsewhere such as on Netlify.
 
-The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`.
+The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`. Have a look at the [eleventy path prefix docs page](https://www.11ty.dev/docs/config/#deploy-to-a-subdirectory-with-a-path-prefix) for more details.
 
 ```javascript
 import { HtmlBasePlugin } from "@11ty/eleventy";
