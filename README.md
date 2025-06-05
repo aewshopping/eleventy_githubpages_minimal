@@ -76,7 +76,7 @@ export const config = {
 	pathPrefix: "/<repo-name>/",
 }
 ```
-Using some kind of magic this means that the site html looks 'normal' but when deploying to github pages everything works fine too, with all the files sitting _after_ `https://<username>.github.io/<repo-name>/`.
+Using some kind of magic this means that the site html uses relative paths for urls that make everything work fine whatever environment you are in. Although I haven't yet really tested this!
 
 N.b. You could also use the `<base>` html element in the html `<head>` but according to the eleventy docs this is a bit flakey. You could also argue that it is better to put this sort of thing in the config where it is more transparent.
 
