@@ -55,11 +55,11 @@ This method seems to work pretty well but some people may find it odd or confusi
 
 No matter what method you choose for getting the site on github pages there will be an issue with fixed assets (like css files) not being referenced correctly.
 
-This is because when building with eleventy you will typically stick some files (like css files) in a `public` folder and then in your `<head></head>` write something like: `<link rel="stylesheet" type="text/css" href="public/style.css">`.
+This is because when building with eleventy you will typically stick some files (like css files) in a `public` folder and then in your `<head></head>` write something like: `<link rel="stylesheet" type="text/css" href="/public/style.css">`.
 
 But because your github pages builds your site relative to the repo name - `https://<username>.github.io/<repo-name>/` - the browser will be looking for that css file under `https://<username>.github.io/public/`.
 
-You could just change the href in the head (`href="<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server or if you are serving later elsewhere such as on Netlify.
+You could just change the href in the head (`href="/<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server or if you are serving later elsewhere such as on Netlify.
 
 The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`. Have a look at the [eleventy path prefix docs page](https://www.11ty.dev/docs/config/#deploy-to-a-subdirectory-with-a-path-prefix) for more details.
 
@@ -77,6 +77,8 @@ export const config = {
 }
 ```
 Using some kind of magic this means that the site html looks 'normal' but when deploying to github pages everything works fine too, with all the files sitting _after_ `https://<username>.github.io/<repo-name>/`.
+
+N.b. You could also use the `<base>` html element in the html `<head>` but according to the eleventy docs this is a bit flakey. You could also argue that it is better to put this sort of thing in the config where it is more transparent.
 
 ## Caching
 
