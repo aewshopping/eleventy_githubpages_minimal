@@ -8,7 +8,7 @@ Objective is to make a minimal eleventy site and serve with github pages, as eas
 
 My starting premise is that I am going to copy the output directory `_site` to the repo (noting that I need to rename the output directory to `docs`), rather than do what you should normally do which is .gitignore it.
 
-If you select this option in settings **you will need to run the build process remotely** to create the build directory and then push this all to the repo (the same branch).
+For this option **you will need to run the build process remotely** to create the build directory and then push this all to the repo (the same branch).
 
 Steps are:
 
@@ -40,7 +40,7 @@ The steps to get it working:
 
 I found this method to be a little ropey when setting it up, the final build and deploy site action didn't always seem to trigger or run properly. But everyone else uses this method so presumably it will almost always work fine.
 
-### Option 3 - use a pure git-hub actions method
+## Option 3 - use a pure git-hub actions method
 
 As for option 1 you need to make sure that the output directory `_site` folder (noting that I renamed it to `docs`) is stored alongside your source files in your repo, rather than do what you should normally do which is .gitignore it.
 
@@ -50,6 +50,35 @@ I then created two workflows:
 2. a `docs_serve.yaml` which is triggered by completion of the above workflow and uses the boilerplate github actions workflow that you are presented with in `settings` if you go for the build with `GitHub actions` option and select the `static pages` workflow - you get a handy template yaml file. I updated the path to `'./docs'` to point it to where the static files created above are stored. 
 
 This method seems to work pretty well but some people may find it odd or confusing to store the served html files in the same repo, branch / file structure as the source files.
+
+## Path prefixing
+
+No matter what method you choose for getting the site on github pages there will be an issue with fixed assets (like css files) not being referenced correctly.
+
+This is because when building with eleventy you will typically stick some files (like css files) in a `public` folder and then in your `<head></head>` write something like: `<link rel="stylesheet" type="text/css" href="public/style.css">`.
+
+But because your github pages builds your site relative to the repo name - `https://<username>.github.io/<repo-name>/` - the browser will be looking for that css file under `https://<username>.github.io/public/`.
+
+You could just change the href in the head (`href="<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server or if you are serving later elsewhere such as on Netlify.
+
+The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`.
+
+```javascript
+import { HtmlBasePlugin } from "@11ty/eleventy";
+
+export default function (eleventyConfig) {
+	eleventyConfig.addPlugin(HtmlBasePlugin);
+};
+
+export const config = {
+	pathPrefix: "/<repo-name>/",
+}
+```
+Using some kind of magic this means that the site html looks 'normal' but when deploying to github pages everything works fine too, with all the files sitting _after_ `https://<username>.github.io/<repo-name>/`.
+
+## Caching
+
+Not quite sure why but caching seems a bit slow or maybe even 'unbusted' when using github pages, for eg on updates to a css file. I think for a proper site I would deploy externally on Netlify until I had a better handle on this. 
 
 ---
 
