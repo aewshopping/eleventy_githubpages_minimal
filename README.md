@@ -59,11 +59,11 @@ This is because when building with eleventy you will typically stick some files 
 
 But because your github pages builds your site relative to the repo name - `https://<username>.github.io/<repo-name>/` - the browser will be looking for that css file under `https://<username>.github.io/public/`.
 
-You could just change the href in the head (`href="/<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server or if you are serving later elsewhere such as on Netlify.
+You could just change the href in the head (`href="/<repo-name>/public/style.css"`) but then it will only work on your github pages site not your dev server, nor if you serve it later elsewhere such as on Netlify.
 
 The solution is to use the automatically bundled  eleventy plugin `HtmlBasePlugin`. Have a look at the [eleventy path prefix docs page](https://www.11ty.dev/docs/config/#deploy-to-a-subdirectory-with-a-path-prefix) for more details.
 
-Then do something like this in your `eleventy.config.js` file (note I am using ES Modules but most older eleventy sites pre v3 with be using Common JS):
+Then do something like this in your `eleventy.config.js` file (note I am using ES Modules but most older eleventy sites pre v3 will be using Common JS):
 
 ```javascript
 import { HtmlBasePlugin } from "@11ty/eleventy";
