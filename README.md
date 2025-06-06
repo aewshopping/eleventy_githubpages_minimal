@@ -76,9 +76,14 @@ export const config = {
 	pathPrefix: "/<repo-name>/",
 }
 ```
-Using some kind of magic this means that the site html uses relative paths for urls that make everything work fine whatever environment you are in. Although I haven't yet really tested this!
+This means that
 
-N.b. You could also use the `<base>` html element in the html `<head>` but according to the eleventy docs this is a bit flakey. You could also argue that it is better to put this sort of thing in the config where it is more transparent.
+- absolute urls (paths starting with a `/`) within the html have `/<repo-name>` inserted in front of them.
+- when serving the site on both a GitHub-pages _and_ **non**-github-pages environment, `/<repo-name>` is inserted to the website file system. For example `https://website.com/<repo-name>/index.html`.
+
+I _guess_ that when deploying behind a real website name this repo-name filepath thing could go away and it would become simply `https://website.com/index.html` but I haven't looked into this.
+
+N.b. You could also use the `<base>` html element in the html `<head>` but according to the eleventy docs this is a bit flakey. You could also argue that it is better to put this sort of thing in the eleventy config where it is more transparent, rather than hidden away as an templated `include` in the head.
 
 ## Caching
 
