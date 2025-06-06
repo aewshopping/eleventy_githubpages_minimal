@@ -20,7 +20,7 @@ Steps are:
 
 _Any_ changes to the repo (eg even a change to the readme) will trigger github pages to update, even where there won't be any change to the site itself.
 
-There is no way to change this default behaviour, whereas you _can_ change the build and deploy trigger to whatever you want under options 1 and 2.
+There is no way to change this default behaviour, whereas you _can_ change the build and deploy trigger to whatever you want under options 2 and 3.
 
 ## Option 2 - the 'recommended' `deploy from a branch` option
 
