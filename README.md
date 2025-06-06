@@ -35,7 +35,7 @@ The steps to get it working:
 1. Update line 34 of the yaml workflow file to refer to your own repo name `- run: npx @11ty/eleventy --pathprefix=/eleventy_githubpages_minimal/ # the repo name here`.
 2. I also needed to updated line 41 `publish_dir: ./docs` to refer to the right output directory that I had specified in my eleventy config.
 3. Run the workflow, this will create a gh-pages branch, where it will output the site's html per eleventy's normal build process.
-4. On the repo settings, select pages, then choose `deply from a branch` and select the gh-pages branch.
+4. On the repo settings, select pages, then choose `deploy from a branch` and select the gh-pages branch.
 5. This means that whenever the peaceiris action is run (or whatever you decided to call it) it will build to gh-pages branch and then git-hub pages' own deploy action will kick in, thus deploying the site for all to see.
 
 I found this method to be a little ropey when setting it up, the final build and deploy site action didn't always seem to trigger or run properly. But everyone else uses this method so presumably it will almost always work fine.
